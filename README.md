@@ -16,7 +16,7 @@ Este API se conecta a una base de datos MySQL que cuenta con las siguientes tabl
 
 **Tabla profiles** : Contiene los diferentes tipos de perfiles de los usuarios (ADMIN || USER).
 
-###Diagrama de la base de datos:
+### Diagrama de la base de datos:
 ![image](https://github.com/user-attachments/assets/5a568457-58ed-47ec-8dfa-8a40c1ac1b54)
 
 La aplicacion se corre en el **puerto 8080** de **localhost** y cuenta con documentacion creada mediante swagger donde pueden verse todos los endpoints disponibles:
@@ -28,7 +28,7 @@ La aplicacion se corre en el **puerto 8080** de **localhost** y cuenta con docum
 Los puertos estan protegidos y requieren de un token JWT que se obtiene mediante login.
 
 
-###Tecnologias:
+### Tecnologias:
 JDK 17
 Maven
 Spring Web
