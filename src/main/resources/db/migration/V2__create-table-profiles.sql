@@ -1,0 +1,6 @@
+CREATE TABLE profiles(
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    profile_name VARCHAR(10) NOT NULL UNIQUE,
+    PRIMARY KEY (id)
+)
+

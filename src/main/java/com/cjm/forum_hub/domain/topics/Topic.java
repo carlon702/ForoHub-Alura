@@ -1,13 +1,14 @@
 package com.cjm.forum_hub.domain.topics;
 
 import com.cjm.forum_hub.domain.course.Course;
+import com.cjm.forum_hub.domain.topics.dtoReq.DataCreateTopicToDB;
 import com.cjm.forum_hub.domain.users.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.coyote.Response;
+
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Table(name = "topics")
 @Entity(name = "Topic")
@@ -24,26 +25,27 @@ public class Topic {
 
     private String title;
     private String message;
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", referencedColumnName="id")
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", referencedColumnName="id")
     private Course course;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "response_id")
-    private List<Response> responses;
 
-
-    private void addResponse(Response res){
-        this.responses.add(res);
+    public Topic(DataCreateTopicToDB dataCreateTopicToDB) {
+        this.title = dataCreateTopicToDB.title();
+        this.message = dataCreateTopicToDB.message();
+        this.creationDate = LocalDateTime.now();
+        this.status = dataCreateTopicToDB.status();
+        this.course = dataCreateTopicToDB.course();
+        this.author = dataCreateTopicToDB.user();
     }
-
 }

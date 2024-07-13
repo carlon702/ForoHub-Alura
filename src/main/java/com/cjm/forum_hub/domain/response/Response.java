@@ -1,6 +1,7 @@
 package com.cjm.forum_hub.domain.response;
 
 import com.cjm.forum_hub.domain.topics.Topic;
+import com.cjm.forum_hub.domain.topics.dtoReq.DataCreateResponseToDB;
 import com.cjm.forum_hub.domain.users.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,13 +23,22 @@ public class Response {
     private Long id;
     private String message;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topic_id", referencedColumnName="id")
     private Topic topic;
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", referencedColumnName="id")
     private User author;
-    private Response solution;
+
+    private boolean solution;
+
+    public Response(DataCreateResponseToDB dataCreateResponseToDB) {
+        this.message = dataCreateResponseToDB.message();
+        this.solution = dataCreateResponseToDB.solution();
+        this.author = dataCreateResponseToDB.author();
+        this.topic = dataCreateResponseToDB.topic();
+    }
 }

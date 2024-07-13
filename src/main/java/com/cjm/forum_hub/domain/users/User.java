@@ -2,10 +2,18 @@ package com.cjm.forum_hub.domain.users;
 
 
 import com.cjm.forum_hub.domain.profile.Profile;
-import com.cjm.forum_hub.repository.ProfileRepository;
+import com.cjm.forum_hub.domain.users.dtoReq.DataRegisterUserDB;
+import com.cjm.forum_hub.domain.users.dtoReq.DataUserUpdate;
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+
 
 @Table(name = "users")
 @Entity(name = "User")
@@ -14,28 +22,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class User {
-    @Autowired
-    private ProfileRepository profileRepository;
-
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String username;
     private String email;
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "profile_id", referencedColumnName="id")
     private Profile profile;
 
+    public User(DataRegisterUserDB dataRegisterUserDB) {
+        this.username = dataRegisterUserDB.username();
+        this.password = dataRegisterUserDB.password();
+        this.email = dataRegisterUserDB.email();
+        this.profile = dataRegisterUserDB.profile();
+    }
 
-    public User(DataUserRegister dataUserRegister){
-        this.name = dataUserRegister.name();
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+
+    public User(DataUserUpdate dataUserRegister){
+        this.username = dataUserRegister.username();
         this.email = dataUserRegister.email();
         this.password = dataUserRegister.password();
-        this.profile = new Profile(dataUserRegister.profileName());
-        profileRepository.save(this.profile);
+        this.profile = dataUserRegister.profile();
     }
 }
